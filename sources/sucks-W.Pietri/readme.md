@@ -1,1 +1,1 @@
-https://community.smartthings.com/t/ecovacs-deebot-n79/93410/33
+https://github.com/wpietri/sucks
