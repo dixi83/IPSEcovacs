@@ -1,0 +1,10 @@
+[  
+    {  
+        "username":"<email address as in app>",
+        "password":"<password as in app>",
+		"country":"<country as in app>",
+        "bot1": "<serial>@<typecode>.ecorobot.net/atom",
+        "bot2": "<serial>@<typecode>.ecorobot.net/atom",
+        "bot3": "<serial>@<typecode>.ecorobot.net/atom"
+    }
+]
