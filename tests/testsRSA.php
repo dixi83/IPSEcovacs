@@ -13,7 +13,7 @@ $password	= 'eenWW';
 
 $meta['country']		= 'nl';
 $meta['lang']			= 'en';
-$meta['deviceId']		= md5('MartijnD');; //device_id,
+$meta['deviceId']		= md5('MartijnD'); //device_id,
 $meta['appCode']		= 'i_eco_e';
 $meta['appVersion']		= '1.3.5';
 $meta['channel']		= 'c_googleplay';
@@ -63,6 +63,19 @@ echo 'PHP:    '.url4compare($url_Login);
 echo '
 ';
 
+echo '$meta:  '.$meta['authTimespan'].'
+$login: '.$login['authTimespan'];
+echo '
+';
+echo '$meta:  '.$meta['account'].'
+$login: '.$login['account'];
+echo '
+';
+echo '$meta:  '.$meta['password'].'
+$login: '.$login['password'];
+echo '
+';
+
 print_r($response);
 
 $returnLogin = json_decode($response,true);
@@ -71,7 +84,7 @@ echo '
 ';
 
 echo 'MSG nr.:'.showMsg($returnLogin['code']);
-// [end debug]
+/// [end debug]
 
 
 // Functions:
