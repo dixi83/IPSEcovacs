@@ -44,14 +44,16 @@ echo $meta['token'].'
 ';
 $XMPP = json_encode(EcoVacsHTTPS_GetDeviceList($meta));
 
-// somethin here to store the json data.
+$XMPP_ID = 50404 /*[Testhoek\Deebot\XMPP_Info]*/;
+SetValue($XMPP_ID, $XMPP);
+
+//print_r($XMPP);
 
 $XMPP = json_decode($XMPP,true);
 
 EcoVacsXMPP_SendCommand2($XMPP, 0, '');
 
 // Functions:
-
 function EcoVacsHTTPS_Login(&$meta){
 	global $function;
 	
@@ -231,6 +233,58 @@ function EcoVacsHTTPS_GetDeviceList(&$meta){
 			}
 			return $XMPP;
 		}
+	}
+}
+
+function EcoVacsXMPP_SendCommand($XMPP, $robotNr, $command) {
+
+	$set['server'] 		= 'msg-'.$XMPP['continent'].'.ecouser.net'; 	//'msg-'.$glb_continent.'.ecouser.net';
+	$set['port']		= 5223;
+	$set['username']	= $XMPP['username'];			//sucks      DEBUG    username used to login: 201802265a9437ee73aa7@ecouser.net
+	$set['password']	= $XMPP['password'];			//sucks      DEBUG    password used to login: 0/372d00ce/glcTBbzoppbndSRpTflNTpk1gDCAYLQv
+	$set['resource']	= $XMPP['resource'];
+	$set['domain']		= $XMPP['domain'];
+	$set['vacAddr']		= $XMPP['robot'][$robotNr];		//self.vacuum['did'] + '@' + self.vacuum['class'] + '.ecorobot.net/atom'
+	
+	print_r($set);
+	
+	// Send:
+	$conn = new XMPPHP_XMPP($set['server'], $set['port'], $set['username'], $set['password'], $set['resource'], $set['domain'], $printlog = true, $loglevel = XMPPHP_Log::LEVEL_VERBOSE);
+	$conn->useEncryption(false);
+	try {
+		echo "connect() start
+";
+		$conn->connect();
+		echo "processUntil() start
+";
+		$conn->processUntil(array('session_start'));
+		echo "presence() start
+";
+		$conn->presence();
+		$conn->message($set['vacAddr'], '<query xmlns="com:ctl"><ctl td="GetChargeState" />');
+		$conn->disconnect();
+	} catch (XMPPHP_Exception $e) {
+		die($e->getMessage());
+	}
+	
+	return;
+	
+	// Receive Answer
+	$conn = new XMPPHP_XMPP($set['server'], $set['port'], $set['password'], $resource);
+	//$conn = new XMPPHP_XMPP('talk.google.com', 5222, 'username', 'password', 'xmpphp', 'gmail.com', $printlog=true, $loglevel=XMPPHP_Log::LEVEL_INFO);
+	$conn->autoSubscribe();
+	$vcard_request = array();
+	try {
+	    $conn->connect();
+	    while(!$conn->isDisconnected()) {
+	    	$payloads = $conn->processUntil(array('message', 'presence', 'end_stream', 'session_start', 'vcard'));
+	    	foreach($payloads as $event) {
+	    		$pl = $event[1];
+	    		print_r($pl);
+	    		}
+	    	}
+	} catch(XMPPHP_Exception $e) {
+	    die($e->getMessage());
 	}
 }
 
